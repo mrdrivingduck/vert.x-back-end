@@ -47,7 +47,7 @@ public class StartUp {
     private static void initLogger() throws IOException {
         iot.zjt.backend.component.Logger.init();
         logger = LogManager.getLogger(StartUp.class);
-        logger.error("Logger init ok.");
+        logger.info("Logger init ok.");
     }
 
     private static void initConfig() throws IOException, InvalidFileFormatException {
