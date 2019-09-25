@@ -1,6 +1,6 @@
 /**
  * @author Mr Dk.
- * @version 2019/09/06
+ * @version 2019/09/25
  * 
  * The entry point of server.
  */
@@ -55,7 +55,7 @@ public class StartUp {
     }
 
     private static void initVertx() {
-        VertxInstance.init();
+        // VertxInstance.init();
     }
 
     private static void initDatabase() {
@@ -66,14 +66,14 @@ public class StartUp {
     }
 
     private static void initRouter() {
-        HttpRouter.init(VertxInstance.getInstance());
+        HttpRouter.getInstance().init(VertxInstance.getInstance());
     }
 
     private static void initServer() {
         Server.getInstance().init(VertxInstance.getInstance());
         CompositeFuture.all(Arrays.asList(dbCompleteFuture)).setHandler(res -> {
             if (res.succeeded()) {
-                Server.getInstance().run(HttpRouter.getRouter());
+                Server.getInstance().run(HttpRouter.getInstance().getRouter());
             } else {
                 System.err.println(res.cause().getMessage());
             }

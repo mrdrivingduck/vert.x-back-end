@@ -11,11 +11,7 @@ import io.vertx.core.Vertx;
 
 public class VertxInstance {
 
-    private static Vertx vertx = null;
-
-    public static void init() {
-        vertx = Vertx.vertx();
-    }
+    private static Vertx vertx = Vertx.vertx();
 
     public static Vertx getInstance() {
         return vertx;

@@ -1,6 +1,6 @@
 /**
  * @author Mr Dk.
- * @version 2019/09/06
+ * @version 2019/09/25
  * 
  * The HTTP server component.
  */
@@ -15,15 +15,12 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
 
 public class Server {
+    
+    private static Server instance = null;
+    private Server() {}
 
     private HttpServer server;
-
-    private static Server instance = null;
     private Logger logger = LogManager.getLogger(Server.class);
-
-    private Server() {
-
-    }
 
     public static Server getInstance() {
         if (instance == null) {
