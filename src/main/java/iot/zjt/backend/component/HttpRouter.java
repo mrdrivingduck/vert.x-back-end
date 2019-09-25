@@ -8,10 +8,10 @@
 package iot.zjt.backend.component;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import iot.zjt.backend.handler.TestBlockHandler;
 import iot.zjt.backend.handler.TestCompositeHandler;
+import iot.zjt.backend.handler.TestDupHandler;
 import iot.zjt.backend.handler.TestNormalHandler;
 
 public class HttpRouter {
@@ -31,9 +31,10 @@ public class HttpRouter {
     public void init(final Vertx vertx) {
         router = Router.router(vertx);
 
-        new TestNormalHandler().register(router, HttpMethod.GET, "/test/normal");
-        new TestBlockHandler().register(router, HttpMethod.GET, "/test/block");
-        new TestCompositeHandler().register(router, HttpMethod.GET, "/test/composite");
+        new TestNormalHandler().register(router);
+        new TestBlockHandler().register(router);
+        new TestCompositeHandler().register(router);
+        new TestDupHandler().register(router);
     }
 
     public Router getRouter() {

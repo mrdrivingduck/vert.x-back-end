@@ -2,7 +2,7 @@
  * @author Mr Dk.
  * @version 2019/09/25
  * 
- * A testing class for normal handler implementation
+ * A testing class for duplicated URL path
  */
 
 package iot.zjt.backend.handler;
@@ -15,16 +15,16 @@ import iot.zjt.backend.handler.annotation.RequestType;
 import iot.zjt.backend.handler.base.BaseNormalHandler;
 
 @ApiUrl(url = "/test/normal")
-@RequestType(array = { HttpMethod.GET })
-public class TestNormalHandler extends BaseNormalHandler {
-
+@RequestType(array = { HttpMethod.DELETE })
+public class TestDupHandler extends BaseNormalHandler {
+    
     @Override
     public void register(final Router router) {
-        super.registerDetail(router, TestNormalHandler.class);
+        super.registerDetail(router, TestDupHandler.class);
     }
 
     @Override
     protected void handle(RoutingContext routingContext) {
-        routingContext.response().end("Normal handler OK.");
+        routingContext.response().end("Duplicated normal handler OK.");
     }
 }
