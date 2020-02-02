@@ -1,6 +1,6 @@
 /**
  * @author Mr Dk.
- * @version 2019/09/25
+ * @version 2020/02/02
  * 
  * A testing class for normal handler implementation
  */
@@ -25,6 +25,8 @@ public class TestNormalHandler extends BaseNormalHandler {
 
     @Override
     protected void handle(RoutingContext routingContext) {
-        routingContext.response().end("Normal handler OK.");
+        routingContext.response()
+            .putHeader("Access-Control-Allow-Origin", "*")
+            .end("Normal handler OK.");
     }
 }

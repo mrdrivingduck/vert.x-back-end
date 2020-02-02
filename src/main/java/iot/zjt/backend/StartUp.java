@@ -1,7 +1,7 @@
 /**
  * @author Mr Dk.
  * @version 2019/09/25
- * 
+ *
  * The entry point of server.
  */
 
@@ -29,7 +29,6 @@ public class StartUp {
     private static Future<Void> dbCompleteFuture = null;
 
     public static void main(String[] args) {
-    
         try {
             initLogger(); // Init the logger
             initConfig(); // Init the configuration
