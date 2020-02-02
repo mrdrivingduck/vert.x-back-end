@@ -1,6 +1,6 @@
-# vert.x-backend
+# vert.x-back-end
 
-🏎️ Backend framework of _Vert.x_
+🏎️ Back-end framework of _Vert.x_
 
 Created by : Mr Dk.
 
