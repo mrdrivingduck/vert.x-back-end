@@ -1,10 +1,3 @@
-/**
- * @author Mr Dk.
- * @version 2019/09/25
- *
- * The entry point of server.
- */
-
 package iot.zjt.backend;
 
 import java.io.IOException;
@@ -22,6 +15,12 @@ import iot.zjt.backend.component.HttpRouter;
 import iot.zjt.backend.component.Server;
 import iot.zjt.backend.component.VertxInstance;
 
+/**
+ * The entry point of server.
+ * 
+ * @author Mr Dk.
+ * @version 2020/03/08
+ */
 public class StartUp {
 
     private static Logger logger = null;
@@ -58,7 +57,7 @@ public class StartUp {
     }
 
     private static void initDatabase() {
-        Database.init();
+        Database.init(VertxInstance.getInstance());
         dbCompleteFuture = Future.future(promise -> {
             Database.test(promise);
         });
@@ -74,7 +73,7 @@ public class StartUp {
             if (res.succeeded()) {
                 Server.getInstance().run(HttpRouter.getInstance().getRouter());
             } else {
-                System.err.println(res.cause().getMessage());
+               logger.error(res.cause().getMessage());
             }
         });
     }
