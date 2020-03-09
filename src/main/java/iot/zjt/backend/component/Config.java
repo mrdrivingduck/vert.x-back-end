@@ -10,7 +10,7 @@ import org.ini4j.Wini;
  * The configuration component.
  * 
  * @author Mr Dk.
- * @version 2020/03/08
+ * @version 2020/03/09
  */
 public class Config {
 
@@ -27,23 +27,9 @@ public class Config {
     }
 
     /**
-     * Get the config content through section and key.
-     * 
-     * @param section Config section.
-     * @param key Config key.
-     * @return The config content.
+     * @return The configuration object.
      */
-    public static String getConfig(String section, String key) {
-        return ini.get(section, key);
-    }
-
-    /**
-     * To judge whether a key is absent in config.
-     * 
-     * @param key Config key.
-     * @return Whether the key exists.
-     */
-    public static boolean contains(String key) {
-        return ini.containsKey(key);
+    public static Wini getConfig() {
+        return ini;
     }
 }

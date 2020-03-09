@@ -17,7 +17,7 @@ import io.vertx.sqlclient.PoolOptions;
  * The database component.
  * 
  * @author Mr Dk.
- * @version 2020/03/08
+ * @version 2020/03/09
  */
 public class Database {
 
@@ -33,11 +33,11 @@ public class Database {
      * @param vertx The Vert.x instance.
      */
     public static void init(final Vertx vertx) {
-        if (Config.contains(MYSQL)) {
+        if (Config.getConfig().containsKey(MYSQL)) {
             logger.info("Configuration of MySQL database detected. Initializing...");
             initMysql(vertx);
         } 
-        if (Config.contains("mongodb")) {
+        if (Config.getConfig().containsKey("mongodb")) {
             // 
         }
     }
@@ -50,9 +50,9 @@ public class Database {
     public static void test(Promise<Void> promise) {
         // Testing MySQL.
         Future<Void> mySQLFuture = Future.future(mySQLPromise -> {
-            if (Config.contains(MYSQL)) {
+            if (Config.getConfig().containsKey(MYSQL)) {
                 logger.info("Testing MySQL database...");
-                String sql = "SELECT * FROM " + Config.getConfig(MYSQL, "testingTable") + ";";
+                String sql = "SELECT * FROM " + Config.getConfig().get(MYSQL, "testingTable") + ";";
                 mySQLPool.query(sql, queryResult -> {
                     if (queryResult.succeeded()) {
                         logger.info("MySQL database ok.");
@@ -84,14 +84,14 @@ public class Database {
      */
     private static void initMysql(final Vertx vertx) {
         MySQLConnectOptions connectOptions = new MySQLConnectOptions()
-            .setPort(Integer.parseInt(Config.getConfig(MYSQL, "port")))
-            .setHost(Config.getConfig(MYSQL, "host"))
-            .setDatabase(Config.getConfig(MYSQL, "database"))
-            .setUser(Config.getConfig(MYSQL, "user"))
-            .setPassword(Config.getConfig(MYSQL, "password"));
+            .setPort(Integer.parseInt(Config.getConfig().get(MYSQL, "port")))
+            .setHost(Config.getConfig().get(MYSQL, "host"))
+            .setDatabase(Config.getConfig().get(MYSQL, "database"))
+            .setUser(Config.getConfig().get(MYSQL, "user"))
+            .setPassword(Config.getConfig().get(MYSQL, "password"));
 
         PoolOptions poolOptions = new PoolOptions()
-            .setMaxSize(Integer.parseInt(Config.getConfig(MYSQL, "poolSize")));
+            .setMaxSize(Integer.parseInt(Config.getConfig().get(MYSQL, "poolSize")));
 
         mySQLPool = MySQLPool.pool(vertx, connectOptions, poolOptions);
     }
