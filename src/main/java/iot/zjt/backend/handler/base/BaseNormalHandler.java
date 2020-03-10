@@ -1,10 +1,3 @@
-/**
- * @author Mr Dk.
- * @version 2019/09/25
- * 
- * Base class for normal handler (executed by event loop thread)
- */
-
 package iot.zjt.backend.handler.base;
 
 import java.util.Arrays;
@@ -18,15 +11,26 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.LoggerHandler;
 import iot.zjt.backend.handler.annotation.ApiUrl;
 import iot.zjt.backend.handler.annotation.RequestType;
 
-public abstract class BaseNormalHandler {
+/**
+ * Base class for normal handler (executed by event loop thread).
+ * 
+ * @author Mr Dk.
+ * @since 2020/03/10
+ */
+public abstract class BaseNormalHandler extends BaseHandler {
 
-    private Logger logger = LogManager.getLogger(BaseNormalHandler.class);
+    private static Logger logger = LogManager.getLogger(BaseNormalHandler.class);
 
-    public abstract void register(final Router router);
-
+    /**
+     * Register the handler for all sub-class.
+     * 
+     * @param router The router.
+     * @param clazz The class of sub-class.
+     */
     protected void registerDetail(final Router router, Class<? extends BaseNormalHandler> clazz) {
         String url = clazz.getAnnotation(ApiUrl.class).url();
         HttpMethod[] methods = clazz.getAnnotation(RequestType.class).array();
@@ -39,11 +43,25 @@ public abstract class BaseNormalHandler {
             sb.append(method.name());
             sb.append("/");
         }
-        route.handler(routeContext -> this.handle(routeContext));
+        route.handler(LoggerHandler.create())
+            .failureHandler(routingContext -> this.handleFailure(routingContext))
+            .handler(routingContext -> this.handle(routingContext));
 
         sb.deleteCharAt(sb.length() - 1);
         logger.info("API end point ready: " + sb.toString() + " " + url);
     }
 
+    /**
+     * The method is left for sub-class to override.
+     * Implement the detailed processing logic.
+     * 
+     * @param routingContext The context.
+     */
     protected abstract void handle(final RoutingContext routingContext);
+
+    @Override
+    protected void handleFailure(final RoutingContext routingContext) {
+        routingContext.response().setStatusCode(500).end();
+        logger.error(routingContext.failure().getMessage());
+    }
 }

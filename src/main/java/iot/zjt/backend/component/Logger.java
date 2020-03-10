@@ -1,6 +1,6 @@
 /**
  * @author Mr Dk.
- * @version 2019/09/06
+ * @since 2019/09/06
  * 
  * The logger component.
  */

@@ -13,6 +13,7 @@ import io.vertx.core.Future;
 import iot.zjt.backend.component.Config;
 import iot.zjt.backend.component.Database;
 import iot.zjt.backend.component.HttpRouter;
+import iot.zjt.backend.component.JwtToken;
 import iot.zjt.backend.component.Server;
 import iot.zjt.backend.component.VertxInstance;
 
@@ -20,7 +21,7 @@ import iot.zjt.backend.component.VertxInstance;
  * The entry point of server.
  * 
  * @author Mr Dk.
- * @version 2020/03/09
+ * @since 2020/03/10
  */
 public class StartUp {
 
@@ -33,12 +34,13 @@ public class StartUp {
             initLogger(); // Init the logger
             initConfig(); // Init the configuration
             initPath(); // Init some path as system properties
+            initJwt(); // Init JWT conponent.
             initVertx(); // Init the Vert.x instance
             initRouter(); // Init the HTTP router
             initDatabase(); // Init the database connection pool
             initServer(); // Init the HTTP server
 
-        } catch(IOException e) {
+        } catch(Exception e) {
             e.printStackTrace();
             System.err.println("Server start up failed");
         }
@@ -80,6 +82,15 @@ public class StartUp {
         for (String key : pathSection.keySet()) {
             System.setProperty(key, pathSection.get(key));
         }
+    }
+
+    /**
+     * Initialize JWT signer and verifier from key store.
+     * 
+     * @throws Exception
+     */
+    private static void initJwt() throws Exception {
+        JwtToken.init();
     }
 
     /**

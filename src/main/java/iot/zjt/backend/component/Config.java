@@ -10,7 +10,7 @@ import org.ini4j.Wini;
  * The configuration component.
  * 
  * @author Mr Dk.
- * @version 2020/03/09
+ * @since 2020/03/09
  */
 public class Config {
 
