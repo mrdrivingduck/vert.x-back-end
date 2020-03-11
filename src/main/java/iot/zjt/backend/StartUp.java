@@ -33,8 +33,8 @@ public class StartUp {
     public static void main(String[] args) {
         try {
             initCliParams(args); // Init the CLI parameters
-            initLogger(); // Init the logger
             initConfig(); // Init the configuration
+            initLogger(); // Init the logger
             initPath(); // Init some path as system properties
             initJwt(); // Init JWT conponent.
             initVertx(); // Init the Vert.x instance

@@ -33,10 +33,6 @@ public class CliParameters {
                 .setIndex(0)
                 .setArgName("back-end config")
                 .setDescription("the path to the configuration file")
-            ).addArgument(new Argument()
-                .setIndex(1)
-                .setArgName("logger config")
-                .setDescription("the path to the logger configuration file")
             );
 
         cmd = cli.parse(Arrays.asList(args));

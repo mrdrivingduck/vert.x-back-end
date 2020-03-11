@@ -18,8 +18,7 @@ public class Logger {
         System.setProperty("vertx.logger-delegate-factory-class-name",
                             "io.vertx.core.logging.Log4j2LogDelegateFactory");
         ConfigurationSource source = new ConfigurationSource(
-            new FileInputStream((String) CliParameters.getCli()
-                                    .getArgumentValue("logger config")));
+            new FileInputStream(Config.getConfig().get("logger", "config")));
         Configurator.initialize(null, source);
     }
 }
