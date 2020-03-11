@@ -17,7 +17,7 @@ import io.vertx.sqlclient.PoolOptions;
  * The database component.
  * 
  * @author Mr Dk.
- * @since 2020/03/09
+ * @since 2020/03/11
  */
 public class Database {
 
@@ -34,7 +34,7 @@ public class Database {
      */
     public static void init(final Vertx vertx) {
         if (Config.getConfig().containsKey(MYSQL)) {
-            logger.info("Configuration of MySQL database detected. Initializing...");
+            logger.warn("Configuration of MySQL database detected. Initializing...");
             initMysql(vertx);
         } 
         if (Config.getConfig().containsKey("mongodb")) {
@@ -51,11 +51,11 @@ public class Database {
         // Testing MySQL.
         Future<Void> mySQLFuture = Future.future(mySQLPromise -> {
             if (Config.getConfig().containsKey(MYSQL)) {
-                logger.info("Testing MySQL database...");
+                logger.warn("Testing MySQL database...");
                 String sql = "SELECT * FROM " + Config.getConfig().get(MYSQL, "testingTable") + ";";
                 mySQLPool.query(sql, queryResult -> {
                     if (queryResult.succeeded()) {
-                        logger.info("MySQL database ok.");
+                        logger.warn("MySQL database ok.");
                         mySQLPromise.complete();
                     } else {
                         logger.error(queryResult.cause().getMessage());

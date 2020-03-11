@@ -10,6 +10,7 @@ import org.ini4j.Profile.Section;
 
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
+import iot.zjt.backend.component.CliParameters;
 import iot.zjt.backend.component.Config;
 import iot.zjt.backend.component.Database;
 import iot.zjt.backend.component.HttpRouter;
@@ -21,7 +22,7 @@ import iot.zjt.backend.component.VertxInstance;
  * The entry point of server.
  * 
  * @author Mr Dk.
- * @since 2020/03/10
+ * @since 2020/03/11
  */
 public class StartUp {
 
@@ -31,13 +32,14 @@ public class StartUp {
 
     public static void main(String[] args) {
         try {
+            initCliParams(args); // Init the CLI parameters
             initLogger(); // Init the logger
             initConfig(); // Init the configuration
             initPath(); // Init some path as system properties
             initJwt(); // Init JWT conponent.
             initVertx(); // Init the Vert.x instance
-            initRouter(); // Init the HTTP router
             initDatabase(); // Init the database connection pool
+            initRouter(); // Init the HTTP router
             initServer(); // Init the HTTP server
 
         } catch(Exception e) {
@@ -54,7 +56,16 @@ public class StartUp {
     private static void initLogger() throws IOException {
         iot.zjt.backend.component.Logger.init();
         logger = LogManager.getLogger(StartUp.class);
-        logger.info("Logger init ok.");
+        logger.warn("Logger init ok.");
+    }
+
+    /**
+     * Parse the CLI parameters.
+     * 
+     * @param args The CLI parameters.
+     */
+    private static void initCliParams(String[] args) {
+        CliParameters.init(args);
     }
 
     /**

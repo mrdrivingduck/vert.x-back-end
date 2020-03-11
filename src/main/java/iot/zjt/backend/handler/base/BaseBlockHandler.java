@@ -49,7 +49,7 @@ public abstract class BaseBlockHandler extends BaseHandler {
             .blockingHandler(routeContext -> this.handle(routeContext));
 
         sb.deleteCharAt(sb.length() - 1);
-        logger.info("API end point ready: " + sb.toString() + " " + url);
+        logger.warn("API end point ready: " + sb.toString() + " " + url);
     }
 
     /**

@@ -48,7 +48,7 @@ public abstract class BaseNormalHandler extends BaseHandler {
             .handler(routingContext -> this.handle(routingContext));
 
         sb.deleteCharAt(sb.length() - 1);
-        logger.info("API end point ready: " + sb.toString() + " " + url);
+        logger.warn("API end point ready: " + sb.toString() + " " + url);
     }
 
     /**

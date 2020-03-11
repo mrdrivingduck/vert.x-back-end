@@ -36,13 +36,11 @@ public class Server {
     public void run(final Router router) {
         int port = Integer.parseInt(Config.getConfig().get("server", "port"));
         server.requestHandler(router);
-        server.listen(port, "localhost", res -> {
+        server.listen(port, res -> {
             if (res.succeeded()) {
                 StringBuilder sb = new StringBuilder("Server listening at: ");
-                sb.append("localhost");
-                sb.append(":");
                 sb.append(port);
-                logger.info(sb.toString());
+                logger.warn(sb.toString());
             } else {
                 logger.error(res.cause().getMessage());
             }
