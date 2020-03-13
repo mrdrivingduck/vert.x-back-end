@@ -10,11 +10,11 @@ package iot.zjt.backend.handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import iot.zjt.backend.handler.annotation.ApiUrl;
+import iot.zjt.backend.handler.annotation.ApiInfo;
 import iot.zjt.backend.handler.annotation.RequestType;
 import iot.zjt.backend.handler.base.BaseNormalHandler;
 
-@ApiUrl(url = "/test/normal")
+@ApiInfo(url = "/test/normal")
 @RequestType(array = { HttpMethod.DELETE })
 public class TestDupHandler extends BaseNormalHandler {
     

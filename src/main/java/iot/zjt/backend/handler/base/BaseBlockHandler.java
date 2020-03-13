@@ -11,8 +11,9 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.LoggerHandler;
-import iot.zjt.backend.handler.annotation.ApiUrl;
+import iot.zjt.backend.handler.annotation.ApiInfo;
 import iot.zjt.backend.handler.annotation.RequestType;
 
 /**
@@ -20,6 +21,7 @@ import iot.zjt.backend.handler.annotation.RequestType;
  * 
  * @author Mr Dk.
  * @since 2020/03/10
+ * @version 2020/03/13
  */
 public abstract class BaseBlockHandler extends BaseHandler {
 
@@ -32,7 +34,7 @@ public abstract class BaseBlockHandler extends BaseHandler {
      * @param clazz The class of sub-class.
      */
     protected void registerDetail(final Router router, Class<? extends BaseBlockHandler> clazz) {
-        String url = clazz.getAnnotation(ApiUrl.class).url();
+        String url = clazz.getAnnotation(ApiInfo.class).url();
         HttpMethod[] methods = clazz.getAnnotation(RequestType.class).array();
         Set<HttpMethod> unique = new HashSet<>(Arrays.asList(methods));
 
@@ -45,6 +47,7 @@ public abstract class BaseBlockHandler extends BaseHandler {
         }
         route
             .handler(LoggerHandler.create())
+            .handler(BodyHandler.create())
             .failureHandler(routingContext -> this.handleFailure(routingContext))
             .blockingHandler(routeContext -> this.handle(routeContext));
 

@@ -11,11 +11,11 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
-import iot.zjt.backend.handler.annotation.ApiUrl;
+import iot.zjt.backend.handler.annotation.ApiInfo;
 import iot.zjt.backend.handler.annotation.RequestType;
 import iot.zjt.backend.handler.base.BaseCompositeHandler;
 
-@ApiUrl(url = "/test/composite")
+@ApiInfo(url = "/test/composite")
 @RequestType(array = { HttpMethod.GET, HttpMethod.PUT, HttpMethod.GET })
 public class TestCompositeHandler extends BaseCompositeHandler {
 

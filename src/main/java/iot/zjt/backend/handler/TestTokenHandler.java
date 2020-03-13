@@ -13,7 +13,7 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import iot.zjt.backend.component.JwtToken;
-import iot.zjt.backend.handler.annotation.ApiUrl;
+import iot.zjt.backend.handler.annotation.ApiInfo;
 import iot.zjt.backend.handler.annotation.RequestType;
 import iot.zjt.backend.handler.base.BaseNormalHandler;
 
@@ -23,7 +23,7 @@ import iot.zjt.backend.handler.base.BaseNormalHandler;
  * @author Mr Dk.
  * @since 2020/03/10
  */
-@ApiUrl(url = "/test/token")
+@ApiInfo(url = "/test/token")
 @RequestType(array = {HttpMethod.GET})
 public class TestTokenHandler extends BaseNormalHandler {
 
