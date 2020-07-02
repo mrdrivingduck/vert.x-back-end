@@ -22,7 +22,7 @@ import iot.zjt.backend.component.VertxInstance;
  * The entry point of server.
  * 
  * @author Mr Dk.
- * @since 2020/03/11
+ * @since 2020/07/02
  */
 public class StartUp {
 
@@ -126,7 +126,7 @@ public class StartUp {
      */
     private static void initServer() {
         Server.getInstance().init(VertxInstance.getInstance());
-        CompositeFuture.all(Arrays.asList(dbCompleteFuture)).setHandler(res -> {
+        CompositeFuture.all(Arrays.asList(dbCompleteFuture)).onComplete(res -> {
             if (res.succeeded()) {
                 Server.getInstance().run(HttpRouter.getInstance().getRouter());
             } else {

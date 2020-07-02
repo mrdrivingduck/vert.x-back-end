@@ -17,7 +17,7 @@ import io.vertx.sqlclient.PoolOptions;
  * The database component.
  * 
  * @author Mr Dk.
- * @since 2020/03/11
+ * @since 2020/07/02
  */
 public class Database {
 
@@ -53,7 +53,7 @@ public class Database {
             if (Config.getConfig().containsKey(MYSQL)) {
                 logger.warn("Testing MySQL database...");
                 String sql = "SELECT * FROM " + Config.getConfig().get(MYSQL, "testingTable") + ";";
-                mySQLPool.query(sql, queryResult -> {
+                mySQLPool.query(sql).execute(queryResult -> {
                     if (queryResult.succeeded()) {
                         logger.warn("MySQL database ok.");
                         mySQLPromise.complete();
@@ -68,8 +68,9 @@ public class Database {
             }
         });
         // Wait for all tests complete...
-        CompositeFuture.all(Arrays.asList(mySQLFuture)).setHandler(res -> {
+        CompositeFuture.all(Arrays.asList(mySQLFuture)).onComplete(res -> {
             if (res.succeeded()) {
+                logger.warn("All database ok.");
                 promise.complete();
             } else {
                 promise.fail("Database testing error.");
