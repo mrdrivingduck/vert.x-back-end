@@ -1,0 +1,17 @@
+{
+  "server.web.bind": 8088,
+  "server.tls.key": "privkey.pem",
+  "server.tls.cert": "fullchain.pem",
+
+  "token.private": "private.pem",
+  "token.public": "public.pem",
+
+  "mysql.host": "www.mrdrivingduck.cn",
+  "mysql.port": 12790,
+  "mysql.user": "tianxuan",
+  "mysql.password": "",
+  "mysql.db": "tianxuan",
+  "mysql.pool.size": 10,
+  "mysql.timeout.second": 5,
+  "mysql.testing.table.name": "tianxuan_test"
+}
