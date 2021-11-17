@@ -41,7 +41,24 @@ java -jar xxx-<version>-fat.jar
 
 ### Configuration
 
+More configurations can be added into [`conf/config.json`](conf/config.json) in JSON format. The key of JSON object is named as `xx.xx.xx.xx` which can be used for categorization.
+
+The configuration will be loaded by **LauncherVerticle** and passed as parameter to **MainVerticle**. Then, MainVerticle is able to get configuration object by `AbstractVerticle.config()`.
+
+The configuration component is implemented by [Vert.x Config](https://vertx.io/docs/vertx-config/java/), which supports **listening configuration changes** and **runtime reconfiguring**. But currently it is not implemented in this template.
+
 ### Logger
+
+[Apache Log4J 2](https://logging.apache.org/log4j/2.x/) is used as logging backend in this template. The [initialization code](src/main/java/cn/iot/zjt/backend/component/LoggerInitializer.java) follows [Vert.x Core's suggestions](https://vertx.io/docs/vertx-core/java/#_logging) and completes the connection between Vert.x and Log4J2. The configuration file of logger is placed as [log4j2.xml](src/main/resources/log4j2.xml) under resource path and is free to customize. The usage of logger is to declare a Logger in each class and free to log anything:
+
+```java
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+private static final Logger logger = LogManager.getLogger(Foo.class);
+
+logger.info("Hello world!");
+```
 
 ### Web (HTTPS)
 
@@ -51,14 +68,14 @@ java -jar xxx-<version>-fat.jar
 
 Currently supporting:
 
-- [![database-mysql](https://img.shields.io/badge/MySQL-green?style=for-the-badge&logo=mysql)](https://www.mysql.com/)
+[![database-mysql](https://img.shields.io/badge/MySQL-green?style=for-the-badge&logo=mysql)](https://www.mysql.com/)
 
 More to be extended:
 
-- [![database-postgresql](https://img.shields.io/badge/PostgreSQL-green?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
-- [![database-mongodb](https://img.shields.io/badge/MongoDB-green?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
-- [![database-redis](https://img.shields.io/badge/Redis-green?style=for-the-badge&logo=redis)](https://redis.io/)
-- ...
+[![database-postgresql](https://img.shields.io/badge/PostgreSQL-green?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
+[![database-mongodb](https://img.shields.io/badge/MongoDB-green?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
+[![database-redis](https://img.shields.io/badge/Redis-green?style=for-the-badge&logo=redis)](https://redis.io/)
+...
 
 ## License
 
