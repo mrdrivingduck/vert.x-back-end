@@ -60,7 +60,38 @@ private static final Logger logger = LogManager.getLogger(Foo.class);
 logger.info("Hello world!");
 ```
 
-### Web (HTTPS)
+### Web
+
+[Vert.x Web](https://vertx.io/docs/vertx-web/java/) is used to implement web component. All of the handler functions should be registered to a **Vert.x Web Router**, and the router will be bind to a **Vert.x HTTP Server**. The [initialization code](src/main/java/cn/iot/zjt/backend/component/WebServer.java) loads server configurations like listening port from configuration (`config.json`), and initialize the web router. Finally, it starts the server with the web router and server configurations.
+
+**HTTPS** is supported by a HTTP server option. If enabled, the file path of public key certificate and private key should be provided in the configuration file.
+
+For handling HTTP requests, the template defines the [`EndPoint`](src/main/java/cn/iot/zjt/backend/handler/annotation/EndPoint.java) annotation to configure each API end point handler. The end point information includes:
+
+- URL path of the end point
+- End point version
+- HTTP request type to access the end point
+- Whether accessing this end point needs authentication
+- Whether handler function needs to execute blocking function (because we cannot block Vert.x's eventloop)
+
+The **AbstractHandler** is defined to handle the common logic like end point initialization. When extending a new handler, just write a class which extends **AbstractHandler** class and override `handle()` function. Remember to configure end point information with `EndPoint` annotation:
+
+```java
+@EndPoint(
+  path = "/status",
+  version = "0.0.1",
+  methods = {"GET", "POST"},
+  jwtAuth = false,
+  block = false
+)
+public class StatusHandler extends AbstractHttpHandler {
+
+  @Override
+  protected void handle(RoutingContext ctx) {
+    endRequestWithMessage(ctx, 200, "API status ok.");
+  }
+}
+```
 
 ### JWT Authentication
 
