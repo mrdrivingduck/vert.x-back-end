@@ -30,10 +30,11 @@ public class WebServer {
   public static Future<HttpServer> initServer(final Vertx vertx, final JsonObject config) {
     String privateKey = Config.CONFIG_BASE + config.getString("server.tls.key");
     String certificate = Config.CONFIG_BASE + config.getString("server.tls.cert");
+    boolean httpsEnabled = config.getBoolean("server.tls.enabled", false);
     int port = config.getInteger("server.web.bind");
 
     HttpServerOptions options = new HttpServerOptions()
-      .setSsl(false)  // use HTTPS
+      .setSsl(httpsEnabled)  // use HTTPS
       .setPemKeyCertOptions(new PemKeyCertOptions()
         .setKeyPath(privateKey)
         .setCertPath(certificate)

@@ -1,5 +1,6 @@
 {
   "server.web.bind": 8088,
+  "server.tls.enabled": false,
   "server.tls.key": "privkey.pem",
   "server.tls.cert": "fullchain.pem",
 
