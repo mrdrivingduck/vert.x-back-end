@@ -28,12 +28,12 @@ public class Token {
 
   public static Future<JWTAuth> initTokenProvider(final Vertx vertx, final JsonObject config) {
     String privatePemPath = config.getString("token.private");
-    String publicPemPath = config.getString("token.public");
+    String publicPemPath  = config.getString("token.public");
 
     FileSystem fs = vertx.fileSystem();
 
     Future<Buffer> privateKey = fs.readFile(Config.CONFIG_BASE + privatePemPath);
-    Future<Buffer> publicKey = fs.readFile(Config.CONFIG_BASE + publicPemPath);
+    Future<Buffer> publicKey  = fs.readFile(Config.CONFIG_BASE + publicPemPath);
 
     return CompositeFuture
       .all(privateKey, publicKey)

@@ -59,11 +59,11 @@ public abstract class AbstractHttpHandler {
    */
   public void register(final Router router) {
     Class<? extends AbstractHttpHandler> handlerType = this.getClass();
-    String routePath = handlerType.getAnnotation(EndPoint.class).path();
-    String apiVersion = handlerType.getAnnotation(EndPoint.class).version();
-    String[] requestMethods = handlerType.getAnnotation(EndPoint.class).methods();
-    boolean needJwtAuth = handlerType.getAnnotation(EndPoint.class).jwtAuth();
-    boolean execByEventLoop = !handlerType.getAnnotation(EndPoint.class).block();
+    String   routePath       =  handlerType.getAnnotation(EndPoint.class).path();
+    String   apiVersion      =  handlerType.getAnnotation(EndPoint.class).version();
+    String[] requestMethods  =  handlerType.getAnnotation(EndPoint.class).methods();
+    boolean  needJwtAuth     =  handlerType.getAnnotation(EndPoint.class).jwtAuth();
+    boolean  execByEventLoop = !handlerType.getAnnotation(EndPoint.class).block();
 
     /* Route path initialization */
     Route route = router.route(routePath);
@@ -132,7 +132,8 @@ public abstract class AbstractHttpHandler {
    * @param statusCode The HTTP status code.
    * @param message The message to respond.
    */
-  public static void endRequestWithMessage(final RoutingContext ctx, int statusCode, String message) {
+  public static void endRequestWithMessage(final RoutingContext ctx,
+                                           int statusCode, String message) {
     ctx
       .response()
       .setStatusCode(statusCode)

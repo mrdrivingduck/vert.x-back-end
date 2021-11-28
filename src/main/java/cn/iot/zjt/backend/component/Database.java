@@ -47,7 +47,7 @@ public class Database {
     /* test accessibility */
     return mysqlClient
       .query("SELECT COUNT(*) FROM " +
-              config.getString("mysql.testing.table.name") + ";")
+             config.getString("mysql.testing.table.name") + ";")
       .execute()
       .compose(rows -> {
         logQueryRowCount(rows);

@@ -10,7 +10,7 @@ import io.vertx.core.json.JsonObject;
 /**
  * Configuration initialization.
  *
- * @version 2021/10/13
+ * @version 2021/11/28
  */
 public class Config {
 
@@ -20,20 +20,13 @@ public class Config {
   public static final String API_VERSION = "0.0.1";
 
   public static Future<JsonObject> initConfig(final Vertx vertx, final String path) {
-    return Future.future(promise -> {
-      ConfigStoreOptions configStore = new ConfigStoreOptions()
-        .setType("file")
-        .setConfig(new JsonObject().put("path", path));
-      ConfigRetrieverOptions options = new ConfigRetrieverOptions()
-        .addStore(configStore);
-      ConfigRetriever
-        .create(vertx, options)
-        .getConfig(ar -> {
-          if (ar.failed()) {
-            promise.fail("Fail to get configuration file from " + path);
-          }
-          promise.complete(ar.result());
-        });
-    });
+    ConfigStoreOptions configStore = new ConfigStoreOptions()
+      .setType("file")
+      .setConfig(new JsonObject().put("path", path));
+    ConfigRetrieverOptions options = new ConfigRetrieverOptions()
+      .addStore(configStore);
+    return ConfigRetriever
+      .create(vertx, options)
+      .getConfig();
   }
 }
