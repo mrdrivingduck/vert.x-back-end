@@ -56,7 +56,7 @@ public class Token {
   }
 
   public static String generateToken(JsonObject param) {
-    return Token.tokenProvider.generateToken(param,
+    return tokenProvider.generateToken(param,
       new JWTOptions()
         .setAlgorithm("RS256")
         .setExpiresInMinutes(60)
