@@ -2,6 +2,8 @@
 
 # Vert.x Backend Template
 
+🏎️ Java backend template of [Vert.x](https://vertx.io/)
+
 [![platform-java11](https://img.shields.io/badge/Java%2011-blue?style=for-the-badge&logo=java)](https://openjdk.java.net/projects/jdk/11/)
 [![vertx-logo](https://img.shields.io/badge/Vert.x-purple?style=for-the-badge&logo=eclipsevertdotx)](https://vertx.io)
 
@@ -49,7 +51,7 @@ The configuration component is implemented by [Vert.x Config](https://vertx.io/d
 
 ### Logger
 
-[Apache Log4J 2](https://logging.apache.org/log4j/2.x/) is used as logging backend in this template. The [initialization code](src/main/java/cn/iot/zjt/backend/component/LoggerInitializer.java) follows [Vert.x Core's suggestions](https://vertx.io/docs/vertx-core/java/#_logging) and completes the connection between Vert.x and Log4J2. The configuration file of logger is placed as [log4j2.xml](src/main/resources/log4j2.xml) under resource path and is free to customize. The usage of logger is to declare a Logger in each class and free to log anything:
+[Apache Log4J 2](https://logging.apache.org/log4j/2.x/) is used as logging backend in this template. The [initialization code](src/main/java/cn/iot/zjt/backend/component/LoggerInitializer.java) follows [Vert.x Core's suggestions](https://vertx.io/docs/vertx-core/java/#_logging) and completes the connection between Vert.x and Log4J2. The configuration file of logger is placed as [`log4j2.xml`](src/main/resources/log4j2.xml) under resource path and is free to customize. The usage of logger is to declare a Logger in each class and free to log anything:
 
 ```java
 import org.apache.logging.log4j.LogManager;
@@ -62,7 +64,7 @@ logger.info("Hello world!");
 
 ### Web
 
-[Vert.x Web](https://vertx.io/docs/vertx-web/java/) is used to implement web component. All of the handler functions should be registered to a **Vert.x Web Router**, and the router will be bind to a **Vert.x HTTP Server**. The [initialization code](src/main/java/cn/iot/zjt/backend/component/WebServer.java) loads server configurations like listening port from configuration (`config.json`), and initialize the web router. Finally, it starts the server with the web router and server configurations.
+[Vert.x Web](https://vertx.io/docs/vertx-web/java/) is used to implement web component. All of the handler functions should be registered to a **Vert.x Web Router**, and the router will be bind to a **Vert.x HTTP Server**. The [initialization code](src/main/java/cn/iot/zjt/backend/component/WebServer.java) loads server configurations like listening port from configuration (`conf/config.json`), and initialize the web router. Finally, it starts the server with the web router and server configurations.
 
 **HTTPS** is supported by a HTTP server option. If enabled, the file path of public key certificate and private key should be provided in the configuration file.
 
@@ -95,18 +97,61 @@ public class StatusHandler extends AbstractHttpHandler {
 
 ### JWT Authentication
 
+JSON Web Token authentication is supported with the help of [Vert.x JWT Auth Provider](https://vertx.io/docs/vertx-auth-jwt/java/). A JWT provider instance is initialized with file path of public key certificate and private key, which can be configured in `conf/config.json`. Then, the provider instance can be used **globally** for generating or verifying tokens:
+
+```java
+public static JWTAuth tokenProvider;
+
+public static String generateToken(JsonObject param) {
+  return tokenProvider.generateToken(param,
+    new JWTOptions()
+      .setAlgorithm("RS256")
+      .setExpiresInMinutes(60)
+  );
+}
+
+public static Future<User> authenticate(String token) {
+  return tokenProvider.authenticate(
+    new JsonObject().put("token", token)
+  );
+}
+```
+
+Vert.x provides more authentication methods like OAuth2. Extension can be done in a similar way like JWT.
+
 ### Database Connection
 
-Currently supporting:
+Currently, only MySQL client is supported with the help of [Vert.x MySQL Client](https://vertx.io/docs/vertx-mysql-client/java/). The instance of MySQL client is initialized when the backend starts up, with **connect options** and **pool options** of MySQL server from `conf/config.json`. Then, the MySQL client can be used **globally** for queries, as well as transactions.
 
-[![database-mysql](https://img.shields.io/badge/MySQL-green?style=for-the-badge&logo=mysql)](https://www.mysql.com/)
+```java
+/* instance */
+public static MySQLPool mysqlClient;
 
-More to be extended:
+/* configurations */
+MySQLConnectOptions connectOptions = new MySQLConnectOptions()
+  .setHost          (config.getString ("mysql.host"))
+  .setPort          (config.getInteger("mysql.port"))
+  .setUser          (config.getString ("mysql.user"))
+  .setPassword      (config.getString ("mysql.password"))
+  .setDatabase      (config.getString ("mysql.db"))
+  .setConnectTimeout(config.getInteger("mysql.timeout.second") * 1000);
+PoolOptions poolOptions = new PoolOptions()
+  .setMaxSize(config.getInteger("mysql.pool.size"));
 
-[![database-postgresql](https://img.shields.io/badge/PostgreSQL-green?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
-[![database-mongodb](https://img.shields.io/badge/MongoDB-green?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
-[![database-redis](https://img.shields.io/badge/Redis-green?style=for-the-badge&logo=redis)](https://redis.io/)
-...
+/* initialization */
+mysqlClient = MySQLPool.pool(vertx, connectOptions, poolOptions);
+
+/* query */
+mysqlClient
+  .query("SELECT COUNT(*) FROM table;")
+  .execute()
+  .compose(rows -> {
+    logQueryRowCount(rows);
+    return Future.succeededFuture();
+  });
+```
+
+More DBMS clients can be extended in a similar way, as long as Vert.x supports: [PostgreSQL](https://vertx.io/docs/vertx-pg-client/java/), [MongoDB](https://vertx.io/docs/vertx-mongo-client/java/), [Redis](https://vertx.io/docs/vertx-redis-client/java/), [DB2](https://vertx.io/docs/vertx-db2-client/java/), ...
 
 ## License
 
