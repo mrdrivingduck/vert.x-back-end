@@ -156,4 +156,3 @@ More DBMS clients can be extended in a similar way, as long as Vert.x supports: 
 ## License
 
 Copyright © 2021 Jingtang Zhang ([Apache License 2.0](LICENSE))
-
