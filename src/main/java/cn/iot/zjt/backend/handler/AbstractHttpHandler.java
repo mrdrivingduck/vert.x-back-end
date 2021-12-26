@@ -9,6 +9,7 @@ import cn.iot.zjt.backend.component.Token;
 import cn.iot.zjt.backend.handler.annotation.EndPoint;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
@@ -133,11 +134,24 @@ public abstract class AbstractHttpHandler {
    * @param message The message to respond.
    */
   public static void endRequestWithMessage(final RoutingContext ctx,
-                                           int statusCode, String message) {
+                                           final int statusCode,
+                                           final String message) {
     ctx
       .response()
       .setStatusCode(statusCode)
       .end(new JsonObject().put("message", message).toString());
+  }
+
+  public static void endRequestWithObject(final RoutingContext ctx,
+                                          final int statusCode,
+                                          final JsonObject object) {
+    ctx.response().setStatusCode(statusCode).end(object.toString());
+  }
+
+  public static void endRequestWithArray(final RoutingContext ctx,
+                                         final int statusCode,
+                                         final JsonArray array) {
+    ctx.response().setStatusCode(statusCode).end(array.toString());
   }
 
   /**
