@@ -32,12 +32,14 @@ public class Database {
   public static Future<MySQLPool> initMysqlPool(final Vertx vertx,
                                                 final JsonObject config) {
     MySQLConnectOptions connectOptions = new MySQLConnectOptions()
-      .setHost(          config.getString ("mysql.host"))
-      .setPort(          config.getInteger("mysql.port"))
-      .setUser(          config.getString ("mysql.user"))
-      .setPassword(      config.getString ("mysql.password"))
-      .setDatabase(      config.getString ("mysql.db"))
-      .setConnectTimeout(config.getInteger("mysql.timeout.second") * 1000);
+      .setHost(             config.getString ("mysql.host"))
+      .setPort(             config.getInteger("mysql.port"))
+      .setUser(             config.getString ("mysql.user"))
+      .setPassword(         config.getString ("mysql.password"))
+      .setDatabase(         config.getString ("mysql.db"))
+      .setReconnectInterval(config.getLong   ("mysql.reconnect.millisecond"))
+      .setReconnectAttempts(config.getInteger("mysql.reconnect.attempts"))
+      .setConnectTimeout(   config.getInteger("mysql.timeout.second") * 1000);
 
     PoolOptions poolOptions = new PoolOptions()
       .setMaxSize(config.getInteger("mysql.pool.size"));

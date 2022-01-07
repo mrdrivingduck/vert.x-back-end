@@ -14,5 +14,7 @@
   "mysql.db": "tianxuan",
   "mysql.pool.size": 10,
   "mysql.timeout.second": 5,
+  "mysql.reconnect.millisecond": 5000,
+  "mysql.reconnect.attempts": 10,
   "mysql.testing.table.name": "tianxuan_test"
 }
