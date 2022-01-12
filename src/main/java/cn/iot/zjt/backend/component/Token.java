@@ -1,8 +1,5 @@
 package cn.iot.zjt.backend.component;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -22,7 +19,7 @@ import io.vertx.ext.auth.jwt.JWTAuthOptions;
  */
 public class Token {
 
-  private static final Logger logger = LogManager.getLogger(Token.class);
+  // private static final Logger logger = LogManager.getLogger(Token.class);
 
   public static JWTAuth tokenProvider;
 
@@ -31,7 +28,6 @@ public class Token {
     String publicPemPath  = config.getString("token.public");
 
     FileSystem fs = vertx.fileSystem();
-
     Future<Buffer> privateKey = fs.readFile(Config.CONFIG_BASE + privatePemPath);
     Future<Buffer> publicKey  = fs.readFile(Config.CONFIG_BASE + publicPemPath);
 
@@ -49,9 +45,6 @@ public class Token {
         JWTAuth provider = JWTAuth.create(vertx, authOptions);
         tokenProvider = provider;
         return Future.succeededFuture(provider);
-      })
-      .onFailure(error -> {
-        logger.error(error.getMessage(), error);
       });
   }
 
