@@ -37,12 +37,17 @@ public class MainVerticle extends AbstractVerticle {
       .compose(webServer -> {
         logger.info("Succeed to initialize web server.");
         logger.info("Web server listening at: " + webServer.actualPort() + ".");
-        
+
+        startPromise.complete();
         return Future.succeededFuture();
       })
       .onFailure(error -> {
         logger.error("Failed to initialize server.");
         logger.error(error.getMessage(), error);
+        startPromise.fail(error);
+        vertx.close(ar -> {
+          logger.warn("Server is shut down gracefully.");
+        });
       });
   }
 }

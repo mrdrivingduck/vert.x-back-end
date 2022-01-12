@@ -31,10 +31,15 @@ public class LauncherVerticle extends AbstractVerticle {
         logger.info("Found configuration file.");
         getVertx().deployVerticle(new MainVerticle(),
                                   new DeploymentOptions().setConfig(config));
+        startPromise.complete();
         return Future.succeededFuture();
       })
       .onFailure(error -> {
         logger.error(error.getMessage(), error);
+        startPromise.fail(error);
+        vertx.close(ar -> {
+          logger.warn("Server is shut down gracefully.");
+        });
       });
   }
 }
