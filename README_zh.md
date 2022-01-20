@@ -47,7 +47,7 @@ java -jar xxx-<version>-fat.jar
 
 所有配置项将会被 **LauncherVerticle** 加载，并作为参数传递给 **MainVerticle**。随后，MainVerticle 可以通过 `AbstractVerticle.config()` 拿到所有的配置项。
 
-配置模块是借助 [Vert.x Config](https://vertx.io/docs/vertx-config/java/) 实现的，支持 **配置更改监听** 和 **运行时热加载配置**，但这两个特性没有在当前模板工程中使用。
+配置模块是借助 [Vert.x Config](https://vertx.io/docs/vertx-config/java/) 实现的，支持 **配置更改监听** 和 **运行时配置热加载**。当后端程序监听到配置文件更改时，将立刻解除当前 MainVerticle 的部署，然后基于修改后的配置重新部署一个新的 MainVerticle。
 
 ### 日志模块
 

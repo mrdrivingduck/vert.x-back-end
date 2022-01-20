@@ -47,7 +47,7 @@ More configurations can be added into [`conf/config.json`](conf/config.json) in 
 
 The configuration will be loaded by **LauncherVerticle** and passed as parameter to **MainVerticle**. Then, MainVerticle is able to get configuration object by `AbstractVerticle.config()`.
 
-The configuration component is implemented by [Vert.x Config](https://vertx.io/docs/vertx-config/java/), which supports **listening configuration changes** and **runtime reconfiguring**. But currently it is not implemented in this template.
+The configuration component is implemented by [Vert.x Config](https://vertx.io/docs/vertx-config/java/), which supports **listening to configuration changes** and **runtime hot-reloading**. Once the backend detects modification of the configuration file, it will undeploy the current MainVerticle and deploy another MainVerticle based on the new configuration.
 
 ### Logger
 
