@@ -1,6 +1,5 @@
 package cn.iot.zjt.backend.handler.web;
 
-import cn.iot.zjt.backend.component.Config;
 import cn.iot.zjt.backend.handler.AbstractHttpHandler;
 import cn.iot.zjt.backend.handler.annotation.EndPoint;
 import io.vertx.ext.web.RoutingContext;
@@ -13,7 +12,6 @@ import io.vertx.ext.web.RoutingContext;
  */
 @EndPoint(
   path = "/status",
-  version = Config.API_VERSION,
   methods = {"GET"},
   jwtAuth = false
 )

@@ -3,7 +3,6 @@ package cn.iot.zjt.backend.handler.web;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import cn.iot.zjt.backend.component.Config;
 import cn.iot.zjt.backend.component.Database;
 import cn.iot.zjt.backend.component.Token;
 import cn.iot.zjt.backend.handler.AbstractHttpHandler;
@@ -21,7 +20,6 @@ import io.vertx.sqlclient.Tuple;
  */
 @EndPoint(
   path = "/login",
-  version = Config.API_VERSION,
   methods = {"POST"},
   jwtAuth = false
 )

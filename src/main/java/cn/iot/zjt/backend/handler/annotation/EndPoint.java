@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EndPoint {
   String path();
-  String version();
+  String version() default "";
   String[] methods();
   boolean jwtAuth() default true;
   boolean block() default false;

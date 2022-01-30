@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cn.iot.zjt.backend.component.Config;
 import cn.iot.zjt.backend.component.Token;
 import cn.iot.zjt.backend.handler.annotation.EndPoint;
 import io.vertx.core.Vertx;
@@ -60,11 +61,11 @@ public abstract class AbstractHttpHandler {
    */
   public void register(final Router router) {
     Class<? extends AbstractHttpHandler> handlerType = this.getClass();
-    String   routePath       =  handlerType.getAnnotation(EndPoint.class).path();
-    String   apiVersion      =  handlerType.getAnnotation(EndPoint.class).version();
-    String[] requestMethods  =  handlerType.getAnnotation(EndPoint.class).methods();
-    boolean  needJwtAuth     =  handlerType.getAnnotation(EndPoint.class).jwtAuth();
-    boolean  execByEventLoop = !handlerType.getAnnotation(EndPoint.class).block();
+    String   routePath          =  handlerType.getAnnotation(EndPoint.class).path();
+    String   explicitApiVersion = handlerType.getAnnotation(EndPoint.class).version();
+    String[] requestMethods     =  handlerType.getAnnotation(EndPoint.class).methods();
+    boolean  needJwtAuth        =  handlerType.getAnnotation(EndPoint.class).jwtAuth();
+    boolean  execByEventLoop    = !handlerType.getAnnotation(EndPoint.class).block();
 
     /* Route path initialization */
     Route route = router.route(routePath);
@@ -102,6 +103,10 @@ public abstract class AbstractHttpHandler {
 
     /* Some common logic of APIs */
     route.handler(ctx -> {
+      String apiVersion = explicitApiVersion;
+      if (apiVersion.equals("")) {
+        apiVersion = Config.API_VERSION();
+      }
       ctx.response().putHeader("Api-Version", apiVersion);  // inject API version
       ctx.next();
     });
