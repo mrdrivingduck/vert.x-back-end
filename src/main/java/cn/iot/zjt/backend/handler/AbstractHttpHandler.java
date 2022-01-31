@@ -19,11 +19,12 @@ import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.JWTAuthHandler;
 import io.vertx.ext.web.handler.LoggerHandler;
+import io.vertx.ext.web.handler.ResponseTimeHandler;
 
 /**
  * Base class of all handlers.
  *
- * @version 2021/10/29
+ * @version 2022/01/31
  */
 public abstract class AbstractHttpHandler {
 
@@ -62,7 +63,7 @@ public abstract class AbstractHttpHandler {
   public void register(final Router router) {
     Class<? extends AbstractHttpHandler> handlerType = this.getClass();
     String   routePath          =  handlerType.getAnnotation(EndPoint.class).path();
-    String   explicitApiVersion = handlerType.getAnnotation(EndPoint.class).version();
+    String   explicitApiVersion =  handlerType.getAnnotation(EndPoint.class).version();
     String[] requestMethods     =  handlerType.getAnnotation(EndPoint.class).methods();
     boolean  needJwtAuth        =  handlerType.getAnnotation(EndPoint.class).jwtAuth();
     boolean  execByEventLoop    = !handlerType.getAnnotation(EndPoint.class).block();
@@ -75,8 +76,11 @@ public abstract class AbstractHttpHandler {
       route.handler(JWTAuthHandler.create(Token.tokenProvider));
     }
 
-    /* Logging handle */
+    /* Logging handling */
     route.handler(LoggerHandler.create());
+
+    /* Response time handling */
+    route.handler(ResponseTimeHandler.create());
     
     /* CORS handle */
     CorsHandler corsHandler = CorsHandler
@@ -113,9 +117,9 @@ public abstract class AbstractHttpHandler {
 
     /* Handler execution handler (exception handling) */
     if (execByEventLoop) {  // executed by a event-loop thread
-      route.handler(this::handleWithException);
+      route.handler(this::handle);
     } else {                // executed by a worker thread
-      route.blockingHandler(this::handleWithException);
+      route.blockingHandler(this::handle);
     }
 
     /* Failure handling */
@@ -164,19 +168,5 @@ public abstract class AbstractHttpHandler {
    *
    * @param ctx The routing context.
    */
-  protected abstract void handle(final RoutingContext ctx) throws Exception;
-
-  /**
-   * Deal with the exceptions thrown by the handler,
-   * and fail the routing context.
-   * 
-   * @param ctx The routing context.
-   */
-  private void handleWithException(final RoutingContext ctx) {
-    try {
-      handle(ctx);
-    } catch (Exception e) {
-      ctx.fail(e);
-    }
-  }
+  protected abstract void handle(final RoutingContext ctx);
 }
