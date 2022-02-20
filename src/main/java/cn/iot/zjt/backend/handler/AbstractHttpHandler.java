@@ -1,6 +1,8 @@
 package cn.iot.zjt.backend.handler;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +26,7 @@ import io.vertx.ext.web.handler.ResponseTimeHandler;
 /**
  * Base class of all handlers.
  *
- * @version 2022/01/31
+ * @version 2022/02/20
  */
 public abstract class AbstractHttpHandler {
 
@@ -51,6 +53,25 @@ public abstract class AbstractHttpHandler {
   public AbstractHttpHandler() {
     this.config = null;
     this.vertx = null;
+  }
+
+  private static final Set<HttpMethod> preflightMethods = Set.of(
+    HttpMethod.PUT,
+    HttpMethod.DELETE
+  );
+
+  private CorsHandler createCorsHandler() {
+    return CorsHandler
+      .create(".*.")
+      .allowedHeader("X-Requested-With")
+      .allowedHeader("Access-Control-Allow-Origin")
+      .allowedHeader("Access-Control-Allow-Method")
+      .allowedHeader("Access-Control-Allow-Credentials")
+      .allowedHeader("Origin")
+      .allowedHeader("Content-Type")
+      .allowedHeader("Accept")
+      .allowedHeader("Authorization")
+      .allowCredentials(true);
   }
 
   /**
@@ -82,25 +103,46 @@ public abstract class AbstractHttpHandler {
     /* Response time handling */
     route.handler(ResponseTimeHandler.create());
     
-    /* CORS handle */
-    CorsHandler corsHandler = CorsHandler
-      .create(".*.")
-      .allowedHeader("X-Requested-With")
-      .allowedHeader("Access-Control-Allow-Origin")
-      .allowedHeader("Access-Control-Allow-Method")
-      .allowedHeader("Access-Control-Allow-Credentials")
-      .allowedHeader("Origin")
-      .allowedHeader("Content-Type")
-      .allowedHeader("Accept")
-      .allowedHeader("Authorization")
-      .allowCredentials(true);
+    /* CORS handling */
+    /* CORS handler for current route */
+    CorsHandler corsHandler = createCorsHandler();
+
     for (String methodStr : requestMethods) {
       HttpMethod method = HttpMethod.valueOf(methodStr);
       route.method(method);
       corsHandler.allowedMethod(method);
     }
-    route.method(HttpMethod.OPTIONS);  // allow HTTP pre-flight.
     route.handler(corsHandler);
+
+    /*
+     * If current route must be pre-flighted, then add an extra 
+     * OPTIONS route of this path with CORS handler allowing
+     * pre-flight HTTP methods.
+     * 
+     * There should only be one OPTIONS route on this path.
+     * We should do something to keep it unique.
+     */
+    Set<HttpMethod> routeMethods = new HashSet<>(route.methods());
+    routeMethods.retainAll(preflightMethods);
+    if (!routeMethods.isEmpty()) {
+      boolean allowPreFlight = false;
+
+      /* Find if this path has an OPTIONS route */
+      for (Route r : router.getRoutes()) {
+        if (r.getPath().equals(routePath) &&
+            r.methods().contains(HttpMethod.OPTIONS)) {
+          allowPreFlight = true;
+          break;
+        }
+      }
+
+      /* No OPTIONS route of this path, add one */
+      if (!allowPreFlight) {
+        router
+          .route(HttpMethod.OPTIONS, routePath)
+          .handler(createCorsHandler().allowedMethods(preflightMethods));
+      }
+    }
 
     /* Retrieving request body */
     route.handler(BodyHandler.create());
@@ -115,19 +157,21 @@ public abstract class AbstractHttpHandler {
       ctx.next();
     });
 
-    /* Handler execution handler (exception handling) */
-    if (execByEventLoop) {  // executed by a event-loop thread
+    /* Handler execution handler */
+    if (execByEventLoop) {
+      /* executed by a event-loop thread */
       route.handler(this::handle);
-    } else {                // executed by a worker thread
+    } else {
+      /* executed by a worker thread */
       route.blockingHandler(this::handle);
     }
 
     /* Failure handling */
     route
       .failureHandler(ctx -> {
-        logger.error(ctx.failure().getMessage(), ctx.failure());
+        logger.error(ctx.failure().toString(), ctx.failure());
         endRequestWithMessage(ctx, ctx.statusCode(),
-                              ctx.failure().getMessage());
+                              ctx.failure().toString());
       });
 
     logger.warn("API end point ready: " +

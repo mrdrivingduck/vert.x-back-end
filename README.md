@@ -4,7 +4,7 @@
 
 🏎️ Java backend template of [Vert.x](https://vertx.io/)
 
-[![platform-java11](https://img.shields.io/badge/Java%2011-blue?style=for-the-badge&logo=java)](https://openjdk.java.net/projects/jdk/11/)
+[![platform-java17](https://img.shields.io/badge/Java%2017-blue?style=for-the-badge&logo=java)](https://openjdk.java.net/projects/jdk/17/)
 [![vertx-logo](https://img.shields.io/badge/Vert.x-purple?style=for-the-badge&logo=eclipsevertdotx)](https://vertx.io)
 
 > This application was generated using http://start.vertx.io
